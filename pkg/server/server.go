@@ -9,6 +9,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/Masterminds/sprig"
 	alerttmpl "github.com/prometheus/alertmanager/template"
 	"github.com/rancher/types/apis/management.cattle.io/v3"
 	"github.com/sirupsen/logrus"
@@ -90,7 +91,7 @@ func sendAlert(config *v3.WebhookTemplateConfig, data alerttmpl.Data) error {
 }
 
 func renderTemplate(text string, data alerttmpl.Data) ([]byte, error) {
-	tmpl, err := template.New("").Option("missingkey=zero").Parse(text)
+	tmpl, err := template.New("").Funcs(sprig.TxtFuncMap()).Option("missingkey=zero").Parse(text)
 	if err != nil {
 		return nil, err
 	}
